@@ -65,8 +65,8 @@ export const TerminalSettingsSection: React.FC = () => {
 					)}
 				</div>
 				<p style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)", margin: 0 }}>
-					Set how long MUX waits for shell integration to activate before executing commands. Increase this value if
-					you experience terminal connection timeouts.
+					Set how long MUX waits for shell integration to activate before executing commands. Increase this value if you
+					experience terminal connection timeouts.
 				</p>
 			</div>
 		</div>

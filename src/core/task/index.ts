@@ -236,9 +236,7 @@ export class Task {
 				const lastApiReqStartedIndex = findLastIndex(this.muxMessages, (m) => m.say === "api_req_started")
 				if (lastApiReqStartedIndex !== -1) {
 					try {
-						const currentApiReqInfo: MUXApiReqInfo = JSON.parse(
-							this.muxMessages[lastApiReqStartedIndex].text || "{}",
-						)
+						const currentApiReqInfo: MUXApiReqInfo = JSON.parse(this.muxMessages[lastApiReqStartedIndex].text || "{}")
 						currentApiReqInfo.retryStatus = {
 							attempt: attempt, // attempt is already 1-indexed from retry.ts
 							maxAttempts: maxRetries, // total attempts
@@ -980,10 +978,7 @@ export class Task {
 		}
 
 		// since we don't use api_req_finished anymore, we need to check if the last api_req_started has a cost value, if it doesn't and no cancellation reason to present, then we remove it since it indicates an api request without any partial content streamed
-		const lastApiReqStartedIndex = findLastIndex(
-			modifiedMUXMessages,
-			(m) => m.type === "say" && m.say === "api_req_started",
-		)
+		const lastApiReqStartedIndex = findLastIndex(modifiedMUXMessages, (m) => m.type === "say" && m.say === "api_req_started")
 		if (lastApiReqStartedIndex !== -1) {
 			const lastApiReqStarted = modifiedMUXMessages[lastApiReqStartedIndex]
 			const { cost, cancelReason }: MUXApiReqInfo = JSON.parse(lastApiReqStarted.text || "{}")
@@ -2461,10 +2456,7 @@ export class Task {
 								this.consecutiveMistakeCount = 0
 
 								const absolutePath = path.resolve(cwd, relDirPath)
-								const result = await parseSourceCodeForDefinitionsTopLevel(
-									absolutePath,
-									this.muxIgnoreController,
-								)
+								const result = await parseSourceCodeForDefinitionsTopLevel(absolutePath, this.muxIgnoreController)
 
 								const completeMessage = JSON.stringify({
 									...sharedMessageProps,
@@ -2828,9 +2820,7 @@ export class Task {
 									this.consecutiveAutoApprovedRequestsCount++
 									didAutoApprove = true
 								} else {
-									showNotificationForApprovalIfAutoApprovalEnabled(
-										`MUX wants to execute a command: ${command}`,
-									)
+									showNotificationForApprovalIfAutoApprovalEnabled(`MUX wants to execute a command: ${command}`)
 									// this.removeLastPartialMessageIfExistsWithType("say", "command")
 									const didApprove = await askApproval(
 										"command",

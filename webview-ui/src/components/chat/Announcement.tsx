@@ -85,8 +85,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 							tracking.
 						</li>
 						<li>
-							<b>Global MUX Rules:</b> Store multiple rules files in Documents/MUX/Rules to share between
-							projects.
+							<b>Global MUX Rules:</b> Store multiple rules files in Documents/MUX/Rules to share between projects.
 						</li>
 					</ul>
 				</AccordionItem>

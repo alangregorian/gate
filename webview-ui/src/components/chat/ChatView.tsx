@@ -4,14 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useDeepCompareEffect, useEvent, useMount } from "react-use"
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import styled from "styled-components"
-import {
-	MUXApiReqInfo,
-	MUXAsk,
-	MUXMessage,
-	MUXSayBrowserAction,
-	MUXSayTool,
-	ExtensionMessage,
-} from "@shared/ExtensionMessage"
+import { MUXApiReqInfo, MUXAsk, MUXMessage, MUXSayBrowserAction, MUXSayTool, ExtensionMessage } from "@shared/ExtensionMessage"
 import { findLast } from "@shared/array"
 import { combineApiRequests } from "@shared/combineApiRequests"
 import { combineCommandSequences } from "@shared/combineCommandSequences"

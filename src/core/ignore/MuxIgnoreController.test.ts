@@ -150,10 +150,7 @@ describe("MUXIgnoreController", () => {
 
 		it("should handle comments in .muxignore", async () => {
 			// Create a new .muxignore with comments
-			await fs.writeFile(
-				path.join(tempDir, ".muxignore"),
-				["# Comment line", "*.secret", "private/", "temp.*"].join("\n"),
-			)
+			await fs.writeFile(path.join(tempDir, ".muxignore"), ["# Comment line", "*.secret", "private/", "temp.*"].join("\n"))
 
 			controller = new MUXIgnoreController(tempDir)
 			await controller.initialize()

@@ -18,8 +18,8 @@ const InstalledServersView = () => {
 				<VSCodeLink href="https://github.com/modelcontextprotocol" style={{ display: "inline" }}>
 					Model Context Protocol
 				</VSCodeLink>{" "}
-				enables communication with locally running MCP servers that provide additional tools and resources to extend
-				MUX's capabilities. You can use{" "}
+				enables communication with locally running MCP servers that provide additional tools and resources to extend MUX's
+				capabilities. You can use{" "}
 				<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
 					community-made servers
 				</VSCodeLink>{" "}
