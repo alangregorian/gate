@@ -1,1 +1,1 @@
-See [https://cline.bot/privacy](https://cline.bot/privacy) for our privacy policy.
+See [https://mux.bot/privacy](https://mux.bot/privacy) for our privacy policy.

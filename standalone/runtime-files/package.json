@@ -1,5 +1,5 @@
 {
-	"name": "Cline standalone",
+	"name": "MUX standalone",
 	"version": "1.0.0",
 	"main": "standalone.js",
 	"dependencies": {

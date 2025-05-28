@@ -18,7 +18,7 @@ export interface WebviewMessage {
 		| "openInBrowser"
 		| "openMention"
 		| "showChatView"
-		| "refreshClineRules"
+		| "refreshMUXRules"
 		| "openMcpSettings"
 		| "deleteMcpServer"
 		| "autoApprovalSettings"
@@ -48,11 +48,11 @@ export interface WebviewMessage {
 		| "searchFiles"
 		| "grpc_request"
 		| "grpc_request_cancel"
-		| "toggleClineRule"
+		| "toggleMUXRule"
 		| "toggleCursorRule"
 		| "toggleWindsurfRule"
 		| "toggleWorkflow"
-		| "deleteClineRule"
+		| "deleteMUXRule"
 		| "copyToClipboard"
 		| "updateTerminalConnectionTimeout"
 		| "setActiveQuote"
@@ -101,7 +101,7 @@ export interface WebviewMessage {
 	grpc_request_cancel?: {
 		request_id: string // ID of the request to cancel
 	}
-	// For cline rules and workflows
+	// For mux rules and workflows
 	isGlobal?: boolean
 	rulePath?: string
 	workflowPath?: string
@@ -112,8 +112,8 @@ export interface WebviewMessage {
 	shellIntegrationTimeout?: number
 }
 
-export type ClineAskResponse = "yesButtonClicked" | "noButtonClicked" | "messageResponse"
+export type MUXAskResponse = "yesButtonClicked" | "noButtonClicked" | "messageResponse"
 
-export type ClineCheckpointRestore = "task" | "workspace" | "taskAndWorkspace"
+export type MUXCheckpointRestore = "task" | "workspace" | "taskAndWorkspace"
 
 export type TaskFeedbackType = "thumbs_up" | "thumbs_down"

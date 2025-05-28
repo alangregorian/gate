@@ -63,7 +63,7 @@ export const ExtensionStateContextProvider: React.FC<{
 
 	const [state, setState] = useState<ExtensionState>({
 		version: "",
-		clineMessages: [],
+		muxMessages: [],
 		taskHistory: [],
 		shouldShowAnnouncement: false,
 		autoApprovalSettings: DEFAULT_AUTO_APPROVAL_SETTINGS,
@@ -74,8 +74,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		vscMachineId: "",
 		planActSeparateModelsSetting: true,
 		enableCheckpointsSetting: true,
-		globalClineRulesToggles: {},
-		localClineRulesToggles: {},
+		globalMUXRulesToggles: {},
+		localMUXRulesToggles: {},
 		localCursorRulesToggles: {},
 		localWindsurfRulesToggles: {},
 		workflowToggles: {},
@@ -139,7 +139,7 @@ export const ExtensionStateContextProvider: React.FC<{
 									config.doubaoApiKey,
 									config.mistralApiKey,
 									config.vsCodeLmModelSelector,
-									config.clineApiKey,
+									config.muxApiKey,
 									config.asksageApiKey,
 									config.xaiApiKey,
 									config.sambanovaApiKey,
@@ -167,11 +167,11 @@ export const ExtensionStateContextProvider: React.FC<{
 				const partialMessage = message.partialMessage!
 				setState((prevState) => {
 					// worth noting it will never be possible for a more up-to-date message to be sent here or in normal messages post since the presentAssistantContent function uses lock
-					const lastIndex = findLastIndex(prevState.clineMessages, (msg) => msg.ts === partialMessage.ts)
+					const lastIndex = findLastIndex(prevState.muxMessages, (msg) => msg.ts === partialMessage.ts)
 					if (lastIndex !== -1) {
-						const newClineMessages = [...prevState.clineMessages]
-						newClineMessages[lastIndex] = partialMessage
-						return { ...prevState, clineMessages: newClineMessages }
+						const newMUXMessages = [...prevState.muxMessages]
+						newMUXMessages[lastIndex] = partialMessage
+						return { ...prevState, muxMessages: newMUXMessages }
 					}
 					return prevState
 				})
@@ -268,7 +268,7 @@ export const ExtensionStateContextProvider: React.FC<{
 											config.doubaoApiKey,
 											config.mistralApiKey,
 											config.vsCodeLmModelSelector,
-											config.clineApiKey,
+											config.muxApiKey,
 											config.asksageApiKey,
 											config.xaiApiKey,
 											config.sambanovaApiKey,
@@ -335,8 +335,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		totalTasksSize,
 		showMcp,
 		mcpTab,
-		globalClineRulesToggles: state.globalClineRulesToggles || {},
-		localClineRulesToggles: state.localClineRulesToggles || {},
+		globalMUXRulesToggles: state.globalMUXRulesToggles || {},
+		localMUXRulesToggles: state.localMUXRulesToggles || {},
 		localCursorRulesToggles: state.localCursorRulesToggles || {},
 		localWindsurfRulesToggles: state.localWindsurfRulesToggles || {},
 		workflowToggles: state.workflowToggles || {},

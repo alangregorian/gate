@@ -9,7 +9,7 @@ export const SYSTEM_PROMPT = async (
 	supportsBrowserUse: boolean,
 	mcpHub: McpHub,
 	browserSettings: BrowserSettings,
-) => `You are Cline, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
+) => `You are MUX, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
 
 ====
 
@@ -634,12 +634,12 @@ You accomplish a given task iteratively, breaking it down into clear steps and w
 
 export function addUserInstructions(
 	settingsCustomInstructions?: string,
-	globalClineRulesFileInstructions?: string,
-	localClineRulesFileInstructions?: string,
+	globalMUXRulesFileInstructions?: string,
+	localMUXRulesFileInstructions?: string,
 	localCursorRulesFileInstructions?: string,
 	localCursorRulesDirInstructions?: string,
 	localWindsurfRulesFileInstructions?: string,
-	clineIgnoreInstructions?: string,
+	muxIgnoreInstructions?: string,
 	preferredLanguageInstructions?: string,
 ) {
 	let customInstructions = ""
@@ -649,11 +649,11 @@ export function addUserInstructions(
 	if (settingsCustomInstructions) {
 		customInstructions += settingsCustomInstructions + "\n\n"
 	}
-	if (globalClineRulesFileInstructions) {
-		customInstructions += globalClineRulesFileInstructions + "\n\n"
+	if (globalMUXRulesFileInstructions) {
+		customInstructions += globalMUXRulesFileInstructions + "\n\n"
 	}
-	if (localClineRulesFileInstructions) {
-		customInstructions += localClineRulesFileInstructions + "\n\n"
+	if (localMUXRulesFileInstructions) {
+		customInstructions += localMUXRulesFileInstructions + "\n\n"
 	}
 	if (localCursorRulesFileInstructions) {
 		customInstructions += localCursorRulesFileInstructions + "\n\n"
@@ -664,8 +664,8 @@ export function addUserInstructions(
 	if (localWindsurfRulesFileInstructions) {
 		customInstructions += localWindsurfRulesFileInstructions + "\n\n"
 	}
-	if (clineIgnoreInstructions) {
-		customInstructions += clineIgnoreInstructions
+	if (muxIgnoreInstructions) {
+		customInstructions += muxIgnoreInstructions
 	}
 
 	return `

@@ -30,7 +30,7 @@ const linkContainerStyle: CSSProperties = { margin: "0" }
 const linkStyle: CSSProperties = { display: "inline" }
 
 /*
-You must update the latestAnnouncementId in ClineProvider for new announcements to show to users. This new id will be compared with what's in state for the 'last announcement shown', and if it's different then the announcement will render. As soon as an announcement is shown, the id will be updated in state. This ensures that announcements are not shown more than once, even if the user doesn't close it themselves.
+You must update the latestAnnouncementId in MUXProvider for new announcements to show to users. This new id will be compared with what's in state for the 'last announcement shown', and if it's different then the announcement will render. As soon as an announcement is shown, the id will be updated in state. This ensures that announcements are not shown more than once, even if the user doesn't close it themselves.
 */
 const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 	const minorVersion = version.split(".").slice(0, 2).join(".") // 2.0.0 -> 2.0
@@ -55,7 +55,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					users.
 				</li>
 				<li>
-					<b>New User Experience:</b> Special components and guidance for new users to help them get started with Cline.
+					<b>New User Experience:</b> Special components and guidance for new users to help them get started with MUX.
 				</li>
 				<li>
 					<b>UI Improvements:</b> Fixed loading states and improved settings organization for a smoother experience.
@@ -77,7 +77,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 							<b>Task Timeline:</b> See the history of your coding journey with a visual timeline of checkpoints.
 						</li>
 						<li>
-							<b>UX Improvements:</b> Type while Cline works, smarter auto-scrolling, and copy buttons for task
+							<b>UX Improvements:</b> Type while MUX works, smarter auto-scrolling, and copy buttons for task
 							headers and messages.
 						</li>
 						<li>
@@ -85,7 +85,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 							tracking.
 						</li>
 						<li>
-							<b>Global Cline Rules:</b> Store multiple rules files in Documents/Cline/Rules to share between
+							<b>Global MUX Rules:</b> Store multiple rules files in Documents/MUX/Rules to share between
 							projects.
 						</li>
 					</ul>
@@ -94,15 +94,15 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			<div style={hrStyle} />
 			<p style={linkContainerStyle}>
 				Join us on{" "}
-				<VSCodeLink style={linkStyle} href="https://x.com/cline">
+				<VSCodeLink style={linkStyle} href="https://x.com/mux">
 					X,
 				</VSCodeLink>{" "}
-				<VSCodeLink style={linkStyle} href="https://discord.gg/cline">
+				<VSCodeLink style={linkStyle} href="https://discord.gg/mux">
 					discord,
 				</VSCodeLink>{" "}
 				or{" "}
-				<VSCodeLink style={linkStyle} href="https://www.reddit.com/r/cline/">
-					r/cline
+				<VSCodeLink style={linkStyle} href="https://www.reddit.com/r/mux/">
+					r/mux
 				</VSCodeLink>
 				for more updates!
 			</p>

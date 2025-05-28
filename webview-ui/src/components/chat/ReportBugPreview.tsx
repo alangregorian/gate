@@ -63,10 +63,10 @@ const ReportBugPreview: React.FC<ReportBugPreviewProps> = ({ data }) => {
 					</div>
 				)}
 
-				{bugData.cline_version && (
+				{bugData.mux_version && (
 					<div>
-						<div className="font-semibold">Cline Version</div>
-						<MarkdownBlock markdown={bugData.cline_version} />
+						<div className="font-semibold">MUX Version</div>
+						<MarkdownBlock markdown={bugData.mux_version} />
 					</div>
 				)}
 

@@ -72,8 +72,8 @@ export class BrowserSession {
 	 * Migrates the chromeExecutablePath setting from VSCode configuration to browserSettings
 	 */
 	private async migrateChromeExecutablePathSetting(): Promise<void> {
-		const config = vscode.workspace.getConfiguration("cline")
-		const configPath = vscode.workspace.getConfiguration("cline").get<string>("chromeExecutablePath")
+		const config = vscode.workspace.getConfiguration("mux")
+		const configPath = vscode.workspace.getConfiguration("mux").get<string>("chromeExecutablePath")
 
 		if (configPath !== undefined) {
 			this.browserSettings.chromeExecutablePath = configPath

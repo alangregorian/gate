@@ -1,39 +1,39 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
-import type { BalanceResponse, PaymentTransaction, UsageTransaction } from "@shared/ClineAccount"
+import type { BalanceResponse, PaymentTransaction, UsageTransaction } from "@shared/MuxAccount"
 import { ExtensionMessage } from "@shared/ExtensionMessage"
 
-export class ClineAccountService {
-	private readonly baseUrl = "https://api.cline.bot/v1"
+export class MUXAccountService {
+	private readonly baseUrl = "https://api.mux.bot/v1"
 	private postMessageToWebview: (message: ExtensionMessage) => Promise<void>
-	private getClineApiKey: () => Promise<string | undefined>
+	private getMUXApiKey: () => Promise<string | undefined>
 
 	constructor(
 		postMessageToWebview: (message: ExtensionMessage) => Promise<void>,
-		getClineApiKey: () => Promise<string | undefined>,
+		getMUXApiKey: () => Promise<string | undefined>,
 	) {
 		this.postMessageToWebview = postMessageToWebview
-		this.getClineApiKey = getClineApiKey
+		this.getMUXApiKey = getMUXApiKey
 	}
 
 	/**
-	 * Helper function to make authenticated requests to the Cline API
+	 * Helper function to make authenticated requests to the MUX API
 	 * @param endpoint The API endpoint to call (without the base URL)
 	 * @param config Additional axios request configuration
 	 * @returns The API response data
 	 * @throws Error if the API key is not found or the request fails
 	 */
 	private async authenticatedRequest<T>(endpoint: string, config: AxiosRequestConfig = {}): Promise<T> {
-		const clineApiKey = await this.getClineApiKey()
+		const muxApiKey = await this.getMUXApiKey()
 
-		if (!clineApiKey) {
-			throw new Error("Cline API key not found")
+		if (!muxApiKey) {
+			throw new Error("MUX API key not found")
 		}
 
 		const url = `${this.baseUrl}${endpoint}`
 		const requestConfig: AxiosRequestConfig = {
 			...config,
 			headers: {
-				Authorization: `Bearer ${clineApiKey}`,
+				Authorization: `Bearer ${muxApiKey}`,
 				"Content-Type": "application/json",
 				...config.headers,
 			},

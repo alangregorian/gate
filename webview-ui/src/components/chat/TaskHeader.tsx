@@ -2,7 +2,7 @@ import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"
 import { useWindowSize } from "react-use"
 import { mentionRegexGlobal } from "@shared/context-mentions"
-import { ClineMessage } from "@shared/ExtensionMessage"
+import { MUXMessage } from "@shared/ExtensionMessage"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { formatLargeNumber } from "@/utils/format"
 import { formatSize } from "@/utils/format"
@@ -15,7 +15,7 @@ import { TaskServiceClient } from "@/services/grpc-client"
 import HeroTooltip from "@/components/common/HeroTooltip"
 
 interface TaskHeaderProps {
-	task: ClineMessage
+	task: MUXMessage
 	tokensIn: number
 	tokensOut: number
 	doesModelSupportPromptCache: boolean
@@ -37,7 +37,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	lastApiReqTotalTokens,
 	onClose,
 }) => {
-	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, clineMessages } = useExtensionState()
+	const { apiConfiguration, currentTaskItem, checkpointTrackerErrorMessage, muxMessages } = useExtensionState()
 	const [isTaskExpanded, setIsTaskExpanded] = useState(true)
 	const [isTextExpanded, setIsTextExpanded] = useState(false)
 	const [showSeeMore, setShowSeeMore] = useState(false)
@@ -466,7 +466,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 								</div>
 							)}
 							<div className="flex flex-col">
-								<TaskTimeline messages={clineMessages} />
+								<TaskTimeline messages={muxMessages} />
 								{ContextWindowComponent}
 							</div>
 							{checkpointTrackerErrorMessage && (
@@ -503,7 +503,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 											<>
 												{" "}
 												<a
-													href="https://github.com/cline/cline/wiki/Installing-Git-for-Checkpoints"
+													href="https://github.com/mux/mux/wiki/Installing-Git-for-Checkpoints"
 													style={{
 														color: "inherit",
 														textDecoration: "underline",

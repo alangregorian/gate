@@ -16,7 +16,7 @@ import { fetchOpenGraphData } from "@integrations/misc/link-preview"
 import { handleFileServiceRequest } from "./file"
 import { getTheme } from "@integrations/theme/getTheme"
 import WorkspaceTracker from "@integrations/workspace/WorkspaceTracker"
-import { ClineAccountService } from "@services/account/ClineAccountService"
+import { MUXAccountService } from "@services/account/MuxAccountService"
 import { BrowserSession } from "@services/browser/BrowserSession"
 import { McpHub } from "@services/mcp/McpHub"
 import { telemetryService } from "@/services/posthog/telemetry/TelemetryService"
@@ -46,9 +46,9 @@ import {
 	updateWorkspaceState,
 } from "../storage/state"
 import { Task, cwd } from "../task"
-import { ClineRulesToggles } from "@shared/cline-rules"
+import { MUXRulesToggles } from "../../shared/mux-rules"
 import { sendStateUpdate } from "./state/subscribeToState"
-import { refreshClineRulesToggles } from "@core/context/instructions/user-instructions/cline-rules"
+import { refreshMUXRulesToggles } from "../../core/context/instructions/user-instructions/mux-rules"
 import { refreshExternalRulesToggles } from "@core/context/instructions/user-instructions/external-rules"
 import { refreshWorkflowToggles } from "@core/context/instructions/user-instructions/workflows"
 
@@ -65,7 +65,7 @@ export class Controller {
 	task?: Task
 	workspaceTracker: WorkspaceTracker
 	mcpHub: McpHub
-	accountService: ClineAccountService
+	accountService: MUXAccountService
 	private latestAnnouncementId = "may-16-2025_16:11:00" // update to some unique identifier when we add a new announcement
 
 	constructor(
@@ -73,7 +73,7 @@ export class Controller {
 		private readonly outputChannel: vscode.OutputChannel,
 		postMessage: (message: ExtensionMessage) => Thenable<boolean> | undefined,
 	) {
-		this.outputChannel.appendLine("ClineProvider instantiated")
+		this.outputChannel.appendLine("MUXProvider instantiated")
 		this.postMessage = postMessage
 
 		this.workspaceTracker = new WorkspaceTracker((msg) => this.postMessageToWebview(msg))
@@ -83,11 +83,11 @@ export class Controller {
 			(msg) => this.postMessageToWebview(msg),
 			this.context.extension?.packageJSON?.version ?? "1.0.0",
 		)
-		this.accountService = new ClineAccountService(
+		this.accountService = new MUXAccountService(
 			(msg) => this.postMessageToWebview(msg),
 			async () => {
 				const { apiConfiguration } = await this.getStateToPostToWebview()
-				return apiConfiguration?.clineApiKey
+				return apiConfiguration?.muxApiKey
 			},
 		)
 
@@ -103,7 +103,7 @@ export class Controller {
 	- https://github.com/microsoft/vscode-extension-samples/blob/main/webview-sample/src/extension.ts
 	*/
 	async dispose() {
-		this.outputChannel.appendLine("Disposing ClineProvider...")
+		this.outputChannel.appendLine("Disposing MUXProvider...")
 		await this.clearTask()
 		this.outputChannel.appendLine("Cleared task")
 		while (this.disposables.length) {
@@ -122,11 +122,11 @@ export class Controller {
 	// Auth methods
 	async handleSignOut() {
 		try {
-			await storeSecret(this.context, "clineApiKey", undefined)
+			await storeSecret(this.context, "muxApiKey", undefined)
 			await updateGlobalState(this.context, "userInfo", undefined)
 			await updateGlobalState(this.context, "apiProvider", "openrouter")
 			await this.postStateToWebview()
-			vscode.window.showInformationMessage("Successfully logged out of Cline")
+			vscode.window.showInformationMessage("Successfully logged out of MUX")
 		} catch (error) {
 			vscode.window.showErrorMessage("Logout failed")
 		}
@@ -280,7 +280,7 @@ export class Controller {
 				// You can send any JSON serializable data.
 				// Could also do this in extension .ts
 				//this.postMessageToWebview({ type: "text", text: `Extension: ${Date.now()}` })
-				// initializing new instance of Cline will make sure that any agentically running promises in old instance don't affect our new task. this essentially creates a fresh slate for the new task
+				// initializing new instance of MUX will make sure that any agentically running promises in old instance don't affect our new task. this essentially creates a fresh slate for the new task
 				await this.initTask(message.text, message.images)
 				break
 			case "apiConfiguration":
@@ -327,8 +327,8 @@ export class Controller {
 				await updateGlobalState(this.context, "lastShownAnnouncementId", this.latestAnnouncementId)
 				await this.postStateToWebview()
 				break
-			case "refreshClineRules":
-				await refreshClineRulesToggles(this.context, cwd)
+			case "refreshMUXRules":
+				await refreshMUXRulesToggles(this.context, cwd)
 				await refreshExternalRulesToggles(this.context, cwd)
 				await refreshWorkflowToggles(this.context, cwd)
 				await this.postStateToWebview()
@@ -370,7 +370,7 @@ export class Controller {
 			}
 			// case "openMcpMarketplaceServerDetails": {
 			// 	if (message.text) {
-			// 		const response = await fetch(`https://api.cline.bot/v1/mcp/marketplace/item?mcpId=${message.mcpId}`)
+			// 		const response = await fetch(`https://api.mux.bot/v1/mcp/marketplace/item?mcpId=${message.mcpId}`)
 			// 		const details: McpDownloadResponse = await response.json()
 
 			// 		if (details.readmeContent) {
@@ -418,23 +418,21 @@ export class Controller {
 				}
 				break
 			}
-			case "toggleClineRule": {
+			case "toggleMUXRule": {
 				const { isGlobal, rulePath, enabled } = message
 				if (rulePath && typeof enabled === "boolean" && typeof isGlobal === "boolean") {
 					if (isGlobal) {
-						const toggles =
-							((await getGlobalState(this.context, "globalClineRulesToggles")) as ClineRulesToggles) || {}
+						const toggles = ((await getGlobalState(this.context, "globalMUXRulesToggles")) as MUXRulesToggles) || {}
 						toggles[rulePath] = enabled
-						await updateGlobalState(this.context, "globalClineRulesToggles", toggles)
+						await updateGlobalState(this.context, "globalMUXRulesToggles", toggles)
 					} else {
-						const toggles =
-							((await getWorkspaceState(this.context, "localClineRulesToggles")) as ClineRulesToggles) || {}
+						const toggles = ((await getWorkspaceState(this.context, "localMUXRulesToggles")) as MUXRulesToggles) || {}
 						toggles[rulePath] = enabled
-						await updateWorkspaceState(this.context, "localClineRulesToggles", toggles)
+						await updateWorkspaceState(this.context, "localMUXRulesToggles", toggles)
 					}
 					await this.postStateToWebview()
 				} else {
-					console.error("toggleClineRule: Missing or invalid parameters", {
+					console.error("toggleMUXRule: Missing or invalid parameters", {
 						rulePath,
 						isGlobal: typeof isGlobal === "boolean" ? isGlobal : `Invalid: ${typeof isGlobal}`,
 						enabled: typeof enabled === "boolean" ? enabled : `Invalid: ${typeof enabled}`,
@@ -446,7 +444,7 @@ export class Controller {
 				const { rulePath, enabled } = message
 				if (rulePath && typeof enabled === "boolean") {
 					const toggles =
-						((await getWorkspaceState(this.context, "localWindsurfRulesToggles")) as ClineRulesToggles) || {}
+						((await getWorkspaceState(this.context, "localWindsurfRulesToggles")) as MUXRulesToggles) || {}
 					toggles[rulePath] = enabled
 					await updateWorkspaceState(this.context, "localWindsurfRulesToggles", toggles)
 					await this.postStateToWebview()
@@ -458,8 +456,7 @@ export class Controller {
 			case "toggleCursorRule": {
 				const { rulePath, enabled } = message
 				if (rulePath && typeof enabled === "boolean") {
-					const toggles =
-						((await getWorkspaceState(this.context, "localCursorRulesToggles")) as ClineRulesToggles) || {}
+					const toggles = ((await getWorkspaceState(this.context, "localCursorRulesToggles")) as MUXRulesToggles) || {}
 					toggles[rulePath] = enabled
 					await updateWorkspaceState(this.context, "localCursorRulesToggles", toggles)
 					await this.postStateToWebview()
@@ -471,7 +468,7 @@ export class Controller {
 			case "toggleWorkflow": {
 				const { workflowPath, enabled } = message
 				if (workflowPath && typeof enabled === "boolean") {
-					const toggles = ((await getWorkspaceState(this.context, "workflowToggles")) as ClineRulesToggles) || {}
+					const toggles = ((await getWorkspaceState(this.context, "workflowToggles")) as MUXRulesToggles) || {}
 					toggles[workflowPath] = enabled
 					await updateWorkspaceState(this.context, "workflowToggles", toggles)
 					await this.postStateToWebview()
@@ -693,7 +690,7 @@ export class Controller {
 					)
 					break
 				case "openrouter":
-				case "cline":
+				case "mux":
 					await updateGlobalState(this.context, "previousModeModelId", apiConfiguration.openRouterModelId)
 					await updateGlobalState(this.context, "previousModeModelInfo", apiConfiguration.openRouterModelInfo)
 					break
@@ -753,7 +750,7 @@ export class Controller {
 						await updateGlobalState(this.context, "awsBedrockCustomModelBaseId", newAwsBedrockCustomModelBaseId)
 						break
 					case "openrouter":
-					case "cline":
+					case "mux":
 						await updateGlobalState(this.context, "openRouterModelId", newModelId)
 						await updateGlobalState(this.context, "openRouterModelInfo", newModelInfo)
 						break
@@ -828,11 +825,11 @@ export class Controller {
 				console.error("Failed to abort task")
 			})
 			if (this.task) {
-				// 'abandoned' will prevent this cline instance from affecting future cline instance gui. this may happen if its hanging on a streaming request
+				// 'abandoned' will prevent this mux instance from affecting future mux instance gui. this may happen if its hanging on a streaming request
 				this.task.abandoned = true
 			}
 			await this.initTask(undefined, undefined, historyItem) // clears task again, so we need to abortTask manually above
-			// await this.postStateToWebview() // new Cline instance will post state when it's ready. having this here sent an empty messages array to webview leading to virtuoso having to reload the entire list
+			// await this.postStateToWebview() // new MUX instance will post state when it's ready. having this here sent an empty messages array to webview leading to virtuoso having to reload the entire list
 		}
 	}
 
@@ -872,7 +869,7 @@ export class Controller {
 	async handleAuthCallback(customToken: string, apiKey: string) {
 		try {
 			// Store API key for API calls
-			await storeSecret(this.context, "clineApiKey", apiKey)
+			await storeSecret(this.context, "muxApiKey", apiKey)
 
 			// Send custom token to webview for Firebase auth
 			await this.postMessageToWebview({
@@ -880,15 +877,15 @@ export class Controller {
 				customToken,
 			})
 
-			const clineProvider: ApiProvider = "cline"
-			await updateGlobalState(this.context, "apiProvider", clineProvider)
+			const muxProvider: ApiProvider = "mux"
+			await updateGlobalState(this.context, "apiProvider", muxProvider)
 
 			// Update API configuration with the new provider and API key
 			const { apiConfiguration } = await getAllExtensionState(this.context)
 			const updatedConfig = {
 				...apiConfiguration,
-				apiProvider: clineProvider,
-				clineApiKey: apiKey,
+				apiProvider: muxProvider,
+				muxApiKey: apiKey,
 			}
 
 			if (this.task) {
@@ -896,10 +893,10 @@ export class Controller {
 			}
 
 			await this.postStateToWebview()
-			// vscode.window.showInformationMessage("Successfully logged in to Cline")
+			// vscode.window.showInformationMessage("Successfully logged in to MUX")
 		} catch (error) {
 			console.error("Failed to handle auth callback:", error)
-			vscode.window.showErrorMessage("Failed to log in to Cline")
+			vscode.window.showErrorMessage("Failed to log in to MUX")
 			// Even on login failure, we preserve any existing tokens
 			// Only clear tokens on explicit logout
 		}
@@ -909,7 +906,7 @@ export class Controller {
 
 	private async fetchMcpMarketplaceFromApi(silent: boolean = false): Promise<McpMarketplaceCatalog | undefined> {
 		try {
-			const response = await axios.get("https://api.cline.bot/v1/mcp/marketplace", {
+			const response = await axios.get("https://api.mux.bot/v1/mcp/marketplace", {
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -1048,7 +1045,7 @@ export class Controller {
 		return "@/" + relativePath
 	}
 
-	// 'Add to Cline' context menu in editor and code action
+	// 'Add to MUX' context menu in editor and code action
 	async addSelectedCodeToChat(code: string, filePath: string, languageId: string, diagnostics?: vscode.Diagnostic[]) {
 		// Ensure the sidebar view is visible
 		await vscode.commands.executeCommand("claude-dev.SidebarProvider.focus")
@@ -1071,7 +1068,7 @@ export class Controller {
 		console.log("addSelectedCodeToChat", code, filePath, languageId)
 	}
 
-	// 'Add to Cline' context menu in Terminal
+	// 'Add to MUX' context menu in Terminal
 	async addSelectedTerminalOutputToChat(output: string, terminalName: string) {
 		// Ensure the sidebar view is visible
 		await vscode.commands.executeCommand("claude-dev.SidebarProvider.focus")
@@ -1092,8 +1089,8 @@ export class Controller {
 		console.log("addSelectedTerminalOutputToChat", output, terminalName)
 	}
 
-	// 'Fix with Cline' in code actions
-	async fixWithCline(code: string, filePath: string, languageId: string, diagnostics: vscode.Diagnostic[]) {
+	// 'Fix with MUX' in code actions
+	async fixWithMUX(code: string, filePath: string, languageId: string, diagnostics: vscode.Diagnostic[]) {
 		// Ensure the sidebar view is visible
 		await vscode.commands.executeCommand("claude-dev.SidebarProvider.focus")
 		await setTimeoutPromise(100)
@@ -1102,7 +1099,7 @@ export class Controller {
 		const problemsString = this.convertDiagnosticsToProblemsString(diagnostics)
 		await this.initTask(`Fix the following code in ${fileMention}\n\`\`\`\n${code}\n\`\`\`\n\nProblems:\n${problemsString}`)
 
-		console.log("fixWithCline", code, filePath, languageId, diagnostics, problemsString)
+		console.log("fixWithMUX", code, filePath, languageId, diagnostics, problemsString)
 	}
 
 	convertDiagnosticsToProblemsString(diagnostics: vscode.Diagnostic[]) {
@@ -1340,21 +1337,20 @@ export class Controller {
 			telemetrySetting,
 			planActSeparateModelsSetting,
 			enableCheckpointsSetting,
-			globalClineRulesToggles,
+			globalMUXRulesToggles,
 			shellIntegrationTimeout,
 			isNewUser,
 		} = await getAllExtensionState(this.context)
 
-		const localClineRulesToggles =
-			((await getWorkspaceState(this.context, "localClineRulesToggles")) as ClineRulesToggles) || {}
+		const localMUXRulesToggles = ((await getWorkspaceState(this.context, "localMUXRulesToggles")) as MUXRulesToggles) || {}
 
 		const localWindsurfRulesToggles =
-			((await getWorkspaceState(this.context, "localWindsurfRulesToggles")) as ClineRulesToggles) || {}
+			((await getWorkspaceState(this.context, "localWindsurfRulesToggles")) as MUXRulesToggles) || {}
 
 		const localCursorRulesToggles =
-			((await getWorkspaceState(this.context, "localCursorRulesToggles")) as ClineRulesToggles) || {}
+			((await getWorkspaceState(this.context, "localCursorRulesToggles")) as MUXRulesToggles) || {}
 
-		const workflowToggles = ((await getWorkspaceState(this.context, "workflowToggles")) as ClineRulesToggles) || {}
+		const workflowToggles = ((await getWorkspaceState(this.context, "workflowToggles")) as MUXRulesToggles) || {}
 
 		return {
 			version: this.context.extension?.packageJSON?.version ?? "",
@@ -1363,7 +1359,7 @@ export class Controller {
 			uriScheme: vscode.env.uriScheme,
 			currentTaskItem: this.task?.taskId ? (taskHistory || []).find((item) => item.id === this.task?.taskId) : undefined,
 			checkpointTrackerErrorMessage: this.task?.checkpointTrackerErrorMessage,
-			clineMessages: this.task?.clineMessages || [],
+			muxMessages: this.task?.muxMessages || [],
 			taskHistory: (taskHistory || [])
 				.filter((item) => item.ts && item.task)
 				.sort((a, b) => b.ts - a.ts)
@@ -1379,8 +1375,8 @@ export class Controller {
 			planActSeparateModelsSetting,
 			enableCheckpointsSetting: enableCheckpointsSetting ?? true,
 			vscMachineId: vscode.env.machineId,
-			globalClineRulesToggles: globalClineRulesToggles || {},
-			localClineRulesToggles: localClineRulesToggles || {},
+			globalMUXRulesToggles: globalMUXRulesToggles || {},
+			localMUXRulesToggles: localMUXRulesToggles || {},
 			localWindsurfRulesToggles: localWindsurfRulesToggles || {},
 			localCursorRulesToggles: localCursorRulesToggles || {},
 			workflowToggles: workflowToggles || {},
@@ -1400,12 +1396,12 @@ export class Controller {
 	// Caching mechanism to keep track of webview messages + API conversation history per provider instance
 
 	/*
-	Now that we use retainContextWhenHidden, we don't have to store a cache of cline messages in the user's state, but we could to reduce memory footprint in long conversations.
+	Now that we use retainContextWhenHidden, we don't have to store a cache of mux messages in the user's state, but we could to reduce memory footprint in long conversations.
 
-	- We have to be careful of what state is shared between ClineProvider instances since there could be multiple instances of the extension running at once. For example when we cached cline messages using the same key, two instances of the extension could end up using the same key and overwriting each other's messages.
+	- We have to be careful of what state is shared between MUXProvider instances since there could be multiple instances of the extension running at once. For example when we cached mux messages using the same key, two instances of the extension could end up using the same key and overwriting each other's messages.
 	- Some state does need to be shared between the instances, i.e. the API key--however there doesn't seem to be a good way to notify the other instances that the API key has changed.
 
-	We need to use a unique identifier for each ClineProvider instance's message cache since we could be running several instances of the extension outside of just the sidebar i.e. in editor panels.
+	We need to use a unique identifier for each MUXProvider instance's message cache since we could be running several instances of the extension outside of just the sidebar i.e. in editor panels.
 
 	// conversation history to send in API requests
 

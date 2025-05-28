@@ -32,43 +32,43 @@ export interface ServiceHandlerConfig {
  * Map of service names to their handler configurations
  */
 export const serviceHandlers: Record<string, ServiceHandlerConfig> = {
-	"cline.AccountService": {
+	"mux.AccountService": {
 		requestHandler: handleAccountServiceRequest,
 		streamingHandler: handleAccountServiceStreamingRequest,
 	},
-	"cline.BrowserService": {
+	"mux.BrowserService": {
 		requestHandler: handleBrowserServiceRequest,
 		streamingHandler: handleBrowserServiceStreamingRequest,
 	},
-	"cline.CheckpointsService": {
+	"mux.CheckpointsService": {
 		requestHandler: handleCheckpointsServiceRequest,
 		streamingHandler: handleCheckpointsServiceStreamingRequest,
 	},
-	"cline.FileService": {
+	"mux.FileService": {
 		requestHandler: handleFileServiceRequest,
 		streamingHandler: handleFileServiceStreamingRequest,
 	},
-	"cline.McpService": {
+	"mux.McpService": {
 		requestHandler: handleMcpServiceRequest,
 		streamingHandler: handleMcpServiceStreamingRequest,
 	},
-	"cline.StateService": {
+	"mux.StateService": {
 		requestHandler: handleStateServiceRequest,
 		streamingHandler: handleStateServiceStreamingRequest,
 	},
-	"cline.TaskService": {
+	"mux.TaskService": {
 		requestHandler: handleTaskServiceRequest,
 		streamingHandler: handleTaskServiceStreamingRequest,
 	},
-	"cline.WebService": {
+	"mux.WebService": {
 		requestHandler: handleWebServiceRequest,
 		streamingHandler: handleWebServiceStreamingRequest,
 	},
-	"cline.ModelsService": {
+	"mux.ModelsService": {
 		requestHandler: handleModelsServiceRequest,
 		streamingHandler: handleModelsServiceStreamingRequest,
 	},
-	"cline.SlashService": {
+	"mux.SlashService": {
 		requestHandler: handleSlashServiceRequest,
 		streamingHandler: handleSlashServiceStreamingRequest,
 	},

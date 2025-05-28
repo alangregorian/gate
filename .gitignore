@@ -10,7 +10,7 @@ tmp
 
 pnpm-lock.yaml
 
-.clineignore
+.muxignore
 .venv
 .actrc
 

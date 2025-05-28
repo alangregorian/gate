@@ -1,8 +1,8 @@
-# Cline Tools Reference Guide
+# MUX Tools Reference Guide
 
-## What Can Cline Do?
+## What Can MUX Do?
 
-Cline is your AI assistant that can:
+MUX is your AI assistant that can:
 
 -   Edit and create files in your project
 -   Run terminal commands
@@ -25,7 +25,7 @@ Cline is your AI assistant that can:
     - See the [Mentions Feature Guide](./mentions-guide.md) for details
 
 3. **Review Changes**
-    - Cline will show diffs before making changes
+    - MUX will show diffs before making changes
     - You can edit or reject changes
 
 ## Key Features
@@ -55,9 +55,9 @@ Cline is your AI assistant that can:
 
 ## Available Tools
 
-For the most up-to-date implementation details, you can view the full source code in the [Cline repository](https://github.com/cline/cline/blob/main/src/core/task/index.ts).
+For the most up-to-date implementation details, you can view the full source code in the [MUX repository](https://github.com/mux/mux/blob/main/src/core/task/index.ts).
 
-Cline has access to the following tools for various tasks:
+MUX has access to the following tools for various tasks:
 
 1. **File Operations**
 
@@ -76,8 +76,8 @@ Cline has access to the following tools for various tasks:
 
     - `use_mcp_tool`: Use tools from MCP servers
     - `access_mcp_resource`: Access MCP server resources
-    - Users can create custom MCP tools that Cline can then access
-    - Example: Create a weather API tool that Cline can use to fetch forecasts
+    - Users can create custom MCP tools that MUX can then access
+    - Example: Create a weather API tool that MUX can use to fetch forecasts
 
 4. **Interaction Tools**
     - `ask_followup_question`: Ask user for clarification
@@ -149,6 +149,6 @@ Each tool has specific parameters and usage patterns. Here are some examples:
 
 ## Getting Help
 
--   [Join the Discord community](https://discord.gg/cline)
+-   [Join the Discord community](https://discord.gg/mux)
 -   Check the documentation
--   Provide feedback to improve Cline
+-   Provide feedback to improve MUX

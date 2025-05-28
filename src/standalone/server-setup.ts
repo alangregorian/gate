@@ -79,12 +79,12 @@ export function addServices(
 	wrapStreamingResponse: GrpcStreamingResponseHandlerWrapper,
 ): void {
 	// Account Service
-	server.addService(proto.cline.AccountService.service, {
+	server.addService(proto.mux.AccountService.service, {
 		accountLoginClicked: wrapper(accountLoginClicked, controller),
 	})
 
 	// Browser Service
-	server.addService(proto.cline.BrowserService.service, {
+	server.addService(proto.mux.BrowserService.service, {
 		getBrowserConnectionInfo: wrapper(getBrowserConnectionInfo, controller),
 		testBrowserConnection: wrapper(testBrowserConnection, controller),
 		discoverBrowser: wrapper(discoverBrowser, controller),
@@ -93,13 +93,13 @@ export function addServices(
 	})
 
 	// Checkpoints Service
-	server.addService(proto.cline.CheckpointsService.service, {
+	server.addService(proto.mux.CheckpointsService.service, {
 		checkpointDiff: wrapper(checkpointDiff, controller),
 		checkpointRestore: wrapper(checkpointRestore, controller),
 	})
 
 	// File Service
-	server.addService(proto.cline.FileService.service, {
+	server.addService(proto.mux.FileService.service, {
 		openFile: wrapper(openFile, controller),
 		openImage: wrapper(openImage, controller),
 		deleteRuleFile: wrapper(deleteRuleFile, controller),
@@ -111,7 +111,7 @@ export function addServices(
 	})
 
 	// Mcp Service
-	server.addService(proto.cline.McpService.service, {
+	server.addService(proto.mux.McpService.service, {
 		toggleMcpServer: wrapper(toggleMcpServer, controller),
 		updateMcpTimeout: wrapper(updateMcpTimeout, controller),
 		addRemoteMcpServer: wrapper(addRemoteMcpServer, controller),
@@ -120,7 +120,7 @@ export function addServices(
 	})
 
 	// Models Service
-	server.addService(proto.cline.ModelsService.service, {
+	server.addService(proto.mux.ModelsService.service, {
 		getOllamaModels: wrapper(getOllamaModels, controller),
 		getLmStudioModels: wrapper(getLmStudioModels, controller),
 		getVsCodeLmModels: wrapper(getVsCodeLmModels, controller),
@@ -130,13 +130,13 @@ export function addServices(
 	})
 
 	// Slash Service
-	server.addService(proto.cline.SlashService.service, {
+	server.addService(proto.mux.SlashService.service, {
 		reportBug: wrapper(reportBug, controller),
 		condense: wrapper(condense, controller),
 	})
 
 	// State Service
-	server.addService(proto.cline.StateService.service, {
+	server.addService(proto.mux.StateService.service, {
 		getLatestState: wrapper(getLatestState, controller),
 		subscribeToState: wrapStreamingResponse(subscribeToState, controller),
 		toggleFavoriteModel: wrapper(toggleFavoriteModel, controller),
@@ -144,7 +144,7 @@ export function addServices(
 	})
 
 	// Task Service
-	server.addService(proto.cline.TaskService.service, {
+	server.addService(proto.mux.TaskService.service, {
 		cancelTask: wrapper(cancelTask, controller),
 		clearTask: wrapper(clearTask, controller),
 		deleteTasksWithIds: wrapper(deleteTasksWithIds, controller),
@@ -160,7 +160,7 @@ export function addServices(
 	})
 
 	// Web Service
-	server.addService(proto.cline.WebService.service, {
+	server.addService(proto.mux.WebService.service, {
 		checkIsImageUrl: wrapper(checkIsImageUrl, controller),
 		fetchOpenGraphData: wrapper(fetchOpenGraphData, controller),
 	})
